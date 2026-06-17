@@ -1,0 +1,21 @@
+{
+  "name": "玄机阁 · 国学命理 AI",
+  "short_name": "玄机阁",
+  "description": "以古籍为根，AI 为引。祈福求签、八字精批、周公解梦、黄历择吉。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1410",
+  "theme_color": "#c9a05e",
+  "icons": [
+    {
+      "src": "/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
