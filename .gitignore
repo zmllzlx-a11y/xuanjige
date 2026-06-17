@@ -35,6 +35,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# large media
+public/music.mp3
+*.log
+
 # data (runtime generated)
 /data/*.json
 !data/.gitkeep
