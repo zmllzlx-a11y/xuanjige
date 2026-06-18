@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 const PRODUCTS = [
   {
     id: "bazi-deep",
@@ -40,6 +42,7 @@ const PRODUCTS = [
 ];
 
 export default function PayPage() {
+  const router = useRouter();
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
       {/* 页面标题 */}
@@ -106,6 +109,19 @@ export default function PayPage() {
                 </li>
               ))}
             </ul>
+
+            {/* 立即购买按钮 */}
+            <button
+              onClick={() => router.push(`/checkout?product=${p.id}`)}
+              className="w-full py-3 rounded-xl text-sm font-medium transition-all active:scale-[0.98]"
+              style={{
+                background: `linear-gradient(135deg, ${p.color}dd, ${p.color}88)`,
+                color: "#fff",
+                boxShadow: `0 4px 16px ${p.color}33`,
+              }}
+            >
+              立即购买 ¥{p.price}
+            </button>
           </div>
         ))}
       </div>
