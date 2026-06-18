@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 const PRODUCTS: Record<string, { name: string; price: string }> = {
@@ -10,9 +10,9 @@ const PRODUCTS: Record<string, { name: string; price: string }> = {
   "naming": { name: "宝宝起名", price: "19.9" },
 };
 
-const COUNTDOWN_SECONDS = 5 * 60; // 5 分钟
+const COUNTDOWN_SECONDS = 5 * 60;
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const productId = searchParams.get("product") || "";
@@ -22,7 +22,6 @@ export default function CheckoutPage() {
   const [copied, setCopied] = useState(false);
   const [expired, setExpired] = useState(false);
 
-  // 倒计时
   useEffect(() => {
     if (expired) return;
     if (secondsLeft <= 0) {
@@ -36,14 +35,12 @@ export default function CheckoutPage() {
   const mm = String(Math.floor(secondsLeft / 60)).padStart(2, "0");
   const ss = String(secondsLeft % 60).padStart(2, "0");
 
-  // 复制金额
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(product ? product.price : "");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // fallback
       const ta = document.createElement("textarea");
       ta.value = product?.price || "";
       document.body.appendChild(ta);
@@ -116,7 +113,6 @@ export default function CheckoutPage() {
         className="w-full max-w-sm rounded-2xl p-6 text-center"
         style={{ background: "#f5efe0", boxShadow: "0 8px 32px rgba(0,0,0,0.35)" }}
       >
-        {/* 收款码图片 */}
         <div className="rounded-xl overflow-hidden mx-auto mb-4" style={{ maxWidth: 260 }}>
           <img
             src="/images/wechat-qr.jpg"
@@ -126,7 +122,6 @@ export default function CheckoutPage() {
           />
         </div>
 
-        {/* 收款方 */}
         <p className="text-base font-medium mb-0.5" style={{ color: "#4a3728" }}>
           收款方：玄机阁
         </p>
@@ -134,19 +129,14 @@ export default function CheckoutPage() {
           长按二维码可保存到相册
         </p>
 
-        {/* 分割线 */}
         <div className="border-t my-4" style={{ borderColor: "rgba(74,55,40,0.15)" }} />
 
-        {/* 商品 + 金额 */}
         <p className="text-sm mb-1" style={{ color: "#6b5344" }}>商品：{product.name}</p>
         <div className="flex items-center justify-center gap-2 mt-2">
           <span className="text-xs" style={{ color: "#8b7355" }}>请按此金额付款（用于核验到账）</span>
         </div>
         <div className="flex items-center justify-center gap-2 mt-1">
-          <span
-            className="text-3xl font-display"
-            style={{ color: "#c0392b", fontWeight: 700 }}
-          >
+          <span className="text-3xl font-display" style={{ color: "#c0392b", fontWeight: 700 }}>
             ¥{product.price}
           </span>
           <button
@@ -171,12 +161,11 @@ export default function CheckoutPage() {
         <p className="text-xs leading-relaxed" style={{ color: "rgba(212,196,160,0.4)" }}>
           ② 付款成功后，截图发送给站长确认
         </p>
-        <p className="text-xs leading-relaxed" style={{ color: "rgba(212,196,160,0.4)" }}">
+        <p className="text-xs leading-relaxed" style={{ color: "rgba(212,196,160,0.4)" }}>
           ③ 确认到账后，站长将发送 AI 解读结果给您
         </p>
       </div>
 
-      {/* 返回按钮 */}
       <button
         onClick={() => router.push("/pay")}
         className="mt-6 px-6 py-2 rounded-xl text-xs transition-all"
@@ -189,5 +178,17 @@ export default function CheckoutPage() {
         ← 返回选择其他商品
       </button>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0a0a0f" }}>
+        <p className="text-gold text-sm">加载中...</p>
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }
