@@ -127,69 +127,18 @@ export default function PayPage() {
       </div>
 
       {/* 付款方式 */}
+      {/* 购买提示 */}
       <div
-        className="card-glass mt-10 p-7 animate-float-up"
+        className="card-glass mt-10 p-7 animate-float-up text-center"
         style={{ animationDelay: "0.4s" }}
       >
-        <h2 className="text-xl text-gold font-display text-center mb-5">💳 付款方式</h2>
-
-        <div className="grid md:grid-cols-2 gap-6 max-w-xl mx-auto">
-          {/* 微信收款码 */}
-          <div
-            className="rounded-xl p-4 text-center"
-            style={{
-              border: "1px solid rgba(7,193,96,0.3)",
-              background: "rgba(7,193,96,0.04)",
-            }}
-          >
-            <p className="font-display text-lg mb-1" style={{ color: "#07c160" }}>● 微信支付</p>
-            <p className="text-xs mb-3" style={{ color: "rgba(212,196,160,0.4)" }}>
-              扫码付款 · 备注商品名称
-            </p>
-            <div className="mx-auto w-48 h-48 rounded-xl overflow-hidden">
-              <img
-                src="/images/wechat-qr.jpg"
-                alt="微信收款码"
-                className="w-full h-full object-contain"
-              />
-            </div>
-          </div>
-
-          {/* 其他方式 */}
-          <div
-            className="rounded-xl p-4 text-center"
-            style={{
-              border: "1px solid rgba(201,160,94,0.3)",
-              background: "rgba(201,160,94,0.04)",
-            }}
-          >
-            <p className="font-display text-lg mb-1" style={{ color: "#c9a05e" }}>● 其他方式</p>
-            <p className="text-xs mb-3" style={{ color: "rgba(212,196,160,0.4)" }}>
-              需要其他支付方式？联系站长协商
-            </p>
-            <div
-              className="mx-auto w-48 h-48 rounded-xl flex items-center justify-center"
-              style={{
-                border: "2px dashed rgba(201,160,94,0.3)",
-                background: "rgba(201,160,94,0.05)",
-              }}
-            >
-              <p className="text-xs text-center" style={{ color: "rgba(212,196,160,0.4)" }}>
-                请在右侧<br />联系站长
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="divider-gold mx-auto my-6 w-24" />
-
-        {/* 购买流程说明 */}
-        <div className="max-w-md mx-auto space-y-3">
-          <h3 className="text-sm font-display text-gold text-center mb-3">📋 购买流程</h3>
+        <h2 className="text-xl text-gold font-display mb-5">💳 购买流程</h2>
+        <div className="max-w-md mx-auto space-y-3 text-left">
           {[
-            { step: "①", text: "选择商品，扫码支付对应金额，备注商品名称方便核对" },
-            { step: "②", text: "付款后将「付款截图」发送给站长确认" },
-            { step: "③", text: "确认到账后，站长手动发送 AI 解读结果给您" },
+            { step: "①", text: "选择商品，点击「立即购买」" },
+            { step: "②", text: "跳转支付页面，扫描微信收款码付款" },
+            { step: "③", text: "付款后截图，联系站长确认" },
+            { step: "④", text: "确认到账后，获取 AI 解读结果" },
           ].map((s) => (
             <div
               key={s.step}
