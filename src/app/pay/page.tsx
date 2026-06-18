@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 const PRODUCTS = [
   {
     id: "bazi-deep",
@@ -42,43 +40,6 @@ const PRODUCTS = [
 ];
 
 export default function PayPage() {
-  const [codeInput, setCodeInput] = useState("");
-  const [codeLoading, setCodeLoading] = useState(false);
-  const [codeMsg, setCodeMsg] = useState<{ ok: boolean; text: string } | null>(null);
-
-  const handleRedeem = async () => {
-    const code = codeInput.trim().toUpperCase();
-    if (!code) { setCodeMsg({ ok: false, text: "请输入卡密" }); return; }
-    setCodeLoading(true);
-    setCodeMsg(null);
-    try {
-      const res = await fetch("/codes/manifest.json?t=" + Date.now());
-      if (!res.ok) throw new Error("无法验证卡密，请稍后再试");
-      const data = await res.json();
-      const found = (data.codes || []).find((c: { code: string; product: string }) => c.code === code);
-      if (!found) throw new Error("卡密无效或已使用");
-      // 解锁产品
-      const productsToAdd = found.product === "通用"
-        ? ["bazi-deep", "lottery-deep", "dream-deep", "naming"]
-        : [found.product];
-      const raw = localStorage.getItem("xuanjige_user_v2");
-      const user = raw ? JSON.parse(raw) : null;
-      if (user) {
-        user.paid_products = user.paid_products || [];
-        for (const p of productsToAdd) {
-          if (!user.paid_products.includes(p)) user.paid_products.push(p);
-        }
-        localStorage.setItem("xuanjige_user_v2", JSON.stringify(user));
-      }
-      setCodeMsg({ ok: true, text: "🎉 解锁成功！已获得：" + productsToAdd.join("、") });
-      setCodeInput("");
-    } catch (e) {
-      setCodeMsg({ ok: false, text: e instanceof Error ? e.message : "验证失败" });
-    } finally {
-      setCodeLoading(false);
-    }
-  };
-
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
       {/* 页面标题 */}
@@ -169,40 +130,36 @@ export default function PayPage() {
             <p className="text-xs mb-3" style={{ color: "rgba(212,196,160,0.4)" }}>
               扫码付款 · 备注商品名称
             </p>
-            <div
-              className="mx-auto w-48 h-48 rounded-xl flex items-center justify-center"
-              style={{
-                border: "2px dashed rgba(7,193,96,0.3)",
-                background: "rgba(7,193,96,0.05)",
-              }}
-            >
-              <p className="text-xs text-center text-paper-dark/50 leading-relaxed px-2">
-                请替换为<br />您的微信收款码<br />📷
-              </p>
+            <div className="mx-auto w-48 h-48 rounded-xl overflow-hidden">
+              <img
+                src="/images/wechat-qr.jpg"
+                alt="微信收款码"
+                className="w-full h-full object-contain"
+              />
             </div>
           </div>
 
-          {/* 支付宝收款码 */}
+          {/* 其他方式 */}
           <div
             className="rounded-xl p-4 text-center"
             style={{
-              border: "1px solid rgba(22,119,255,0.3)",
-              background: "rgba(22,119,255,0.04)",
+              border: "1px solid rgba(201,160,94,0.3)",
+              background: "rgba(201,160,94,0.04)",
             }}
           >
-            <p className="font-display text-lg mb-1" style={{ color: "#1677ff" }}>● 支付宝</p>
+            <p className="font-display text-lg mb-1" style={{ color: "#c9a05e" }}>● 其他方式</p>
             <p className="text-xs mb-3" style={{ color: "rgba(212,196,160,0.4)" }}>
-              扫码付款 · 备注商品名称
+              需要其他支付方式？联系站长协商
             </p>
             <div
               className="mx-auto w-48 h-48 rounded-xl flex items-center justify-center"
               style={{
-                border: "2px dashed rgba(22,119,255,0.3)",
-                background: "rgba(22,119,255,0.05)",
+                border: "2px dashed rgba(201,160,94,0.3)",
+                background: "rgba(201,160,94,0.05)",
               }}
             >
-              <p className="text-xs text-center text-paper-dark/50 leading-relaxed px-2">
-                请替换为<br />您的支付宝收款码<br />📷
+              <p className="text-xs text-center" style={{ color: "rgba(212,196,160,0.4)" }}>
+                请在右侧<br />联系站长
               </p>
             </div>
           </div>
@@ -240,49 +197,8 @@ export default function PayPage() {
           付款后请通过以下方式联系站长，发送付款截图：
         </p>
         <div className="flex justify-center gap-6 mt-4">
-          <span className="text-sm" style={{ color: "#07c160" }}>微信：请替换为您的微信号</span>
-          <span className="text-sm" style={{ color: "rgba(212,196,160,0.3)" }}>|</span>
-          <span className="text-sm" style={{ color: "#1677ff" }}>支付宝：请替换为您的手机号</span>
+          <span className="text-sm" style={{ color: "#07c160" }}>微信：扫码上方收款码 → 截图发给我确认</span>
         </div>
-      </div>
-
-      {/* 卡密兑换 */}
-      <div
-        className="card-glass mt-6 p-6 animate-float-up text-center"
-        style={{ animationDelay: "0.55s" }}
-      >
-        <h3 className="text-base text-gold font-display mb-3">🔑 卡密兑换</h3>
-        <p className="text-sm mb-4" style={{ color: "rgba(212,196,160,0.5)" }}>
-          已获得卡密？输入卡密即可立即解锁对应服务
-        </p>
-        <div className="max-w-sm mx-auto flex gap-2">
-          <input
-            value={codeInput}
-            onChange={(e) => setCodeInput(e.target.value)}
-            placeholder="输入卡密，如 XJ-XXXXXXX"
-            className="flex-1 h-11 rounded-xl border border-gold/20 bg-xuan-surface px-3 text-center font-mono text-sm tracking-widest text-paper-dark placeholder:text-ink-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all"
-          />
-          <button
-            onClick={handleRedeem}
-            disabled={codeLoading || !codeInput.trim()}
-            className="h-11 px-5 rounded-xl text-sm font-medium transition-all disabled:opacity-40"
-            style={{
-              background: "linear-gradient(135deg, #c9a05edd, #c9a05e88)",
-              color: "#fff",
-              boxShadow: "0 4px 16px rgba(201,160,94,0.33)",
-            }}
-          >
-            {codeLoading ? "⏳" : "兑换"}
-          </button>
-        </div>
-        {codeMsg && (
-          <p
-            className="mt-3 text-sm"
-            style={{ color: codeMsg.ok ? "#07c160" : "#e53e3e" }}
-          >
-            {codeMsg.ok ? "✅ " : "❌ "}{codeMsg.text}
-          </p>
-        )}
       </div>
 
       {/* 免责声明 */}
