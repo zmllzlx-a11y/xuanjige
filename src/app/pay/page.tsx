@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 const PRODUCTS = [
   {
     id: "bazi-deep",
@@ -40,6 +42,43 @@ const PRODUCTS = [
 ];
 
 export default function PayPage() {
+  const [codeInput, setCodeInput] = useState("");
+  const [codeLoading, setCodeLoading] = useState(false);
+  const [codeMsg, setCodeMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const handleRedeem = async () => {
+    const code = codeInput.trim().toUpperCase();
+    if (!code) { setCodeMsg({ ok: false, text: "请输入卡密" }); return; }
+    setCodeLoading(true);
+    setCodeMsg(null);
+    try {
+      const res = await fetch("/codes/manifest.json?t=" + Date.now());
+      if (!res.ok) throw new Error("无法验证卡密，请稍后再试");
+      const data = await res.json();
+      const found = (data.codes || []).find((c: { code: string; product: string }) => c.code === code);
+      if (!found) throw new Error("卡密无效或已使用");
+      // 解锁产品
+      const productsToAdd = found.product === "通用"
+        ? ["bazi-deep", "lottery-deep", "dream-deep", "naming"]
+        : [found.product];
+      const raw = localStorage.getItem("xuanjige_user_v2");
+      const user = raw ? JSON.parse(raw) : null;
+      if (user) {
+        user.paid_products = user.paid_products || [];
+        for (const p of productsToAdd) {
+          if (!user.paid_products.includes(p)) user.paid_products.push(p);
+        }
+        localStorage.setItem("xuanjige_user_v2", JSON.stringify(user));
+      }
+      setCodeMsg({ ok: true, text: "🎉 解锁成功！已获得：" + productsToAdd.join("、") });
+      setCodeInput("");
+    } catch (e) {
+      setCodeMsg({ ok: false, text: e instanceof Error ? e.message : "验证失败" });
+    } finally {
+      setCodeLoading(false);
+    }
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
       {/* 页面标题 */}
@@ -205,6 +244,45 @@ export default function PayPage() {
           <span className="text-sm" style={{ color: "rgba(212,196,160,0.3)" }}>|</span>
           <span className="text-sm" style={{ color: "#1677ff" }}>支付宝：请替换为您的手机号</span>
         </div>
+      </div>
+
+      {/* 卡密兑换 */}
+      <div
+        className="card-glass mt-6 p-6 animate-float-up text-center"
+        style={{ animationDelay: "0.55s" }}
+      >
+        <h3 className="text-base text-gold font-display mb-3">🔑 卡密兑换</h3>
+        <p className="text-sm mb-4" style={{ color: "rgba(212,196,160,0.5)" }}>
+          已获得卡密？输入卡密即可立即解锁对应服务
+        </p>
+        <div className="max-w-sm mx-auto flex gap-2">
+          <input
+            value={codeInput}
+            onChange={(e) => setCodeInput(e.target.value)}
+            placeholder="输入卡密，如 XJ-XXXXXXX"
+            className="flex-1 h-11 rounded-xl border border-gold/20 bg-xuan-surface px-3 text-center font-mono text-sm tracking-widest text-paper-dark placeholder:text-ink-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all"
+          />
+          <button
+            onClick={handleRedeem}
+            disabled={codeLoading || !codeInput.trim()}
+            className="h-11 px-5 rounded-xl text-sm font-medium transition-all disabled:opacity-40"
+            style={{
+              background: "linear-gradient(135deg, #c9a05edd, #c9a05e88)",
+              color: "#fff",
+              boxShadow: "0 4px 16px rgba(201,160,94,0.33)",
+            }}
+          >
+            {codeLoading ? "⏳" : "兑换"}
+          </button>
+        </div>
+        {codeMsg && (
+          <p
+            className="mt-3 text-sm"
+            style={{ color: codeMsg.ok ? "#07c160" : "#e53e3e" }}
+          >
+            {codeMsg.ok ? "✅ " : "❌ "}{codeMsg.text}
+          </p>
+        )}
       </div>
 
       {/* 免责声明 */}
