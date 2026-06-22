@@ -105,10 +105,10 @@ export default function MeditationPage() {
         <div className="hero-icon mx-auto mb-4" style={{ width: 64, height: 64 }}>
           <span className="text-4xl">🧘</span>
         </div>
-        <h1 className="text-4xl font-display gold-text tracking-widest mb-2" style={{ textShadow: "0 0 30px rgba(201,160,94,0.3)" }}>
-          静心禅坐
+        <h1 className="text-4xl font-display green-text tracking-widest mb-2">
+          禅坐静心
         </h1>
-        <p style={{ color: "rgba(212, 196, 160, 0.5)" }}>静坐常思己过，闲谈莫论人非</p>
+        <p style={{ color: "rgba(232,228,218,0.5)" }}>静则生慧 · 养心安神 · 道法自然</p>
         <div className="divider-gold mx-auto mt-6 w-32" />
       </div>
 

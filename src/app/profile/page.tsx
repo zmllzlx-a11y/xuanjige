@@ -10,6 +10,12 @@ const KIND_LABELS: Record<string, string> = {
   dream: "解梦",
   almanac: "黄历",
   qifu: "祈福",
+  constitution: "体质测评",
+  season: "节气养生",
+  herb: "草药百科",
+  diet: "药膳食谱",
+  acupoint: "经络穴位",
+  ask: "AI顾问",
 };
 
 const KIND_ICONS: Record<string, string> = {
@@ -18,6 +24,12 @@ const KIND_ICONS: Record<string, string> = {
   dream: "🌙",
   almanac: "📅",
   qifu: "🙏",
+  constitution: "🍃",
+  season: "🌿",
+  herb: "🌿",
+  diet: "🍲",
+  acupoint: "🧘",
+  ask: "🤖",
 };
 
 export default function ProfilePage() {
