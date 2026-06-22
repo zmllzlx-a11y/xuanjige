@@ -181,6 +181,9 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.green-text-light {
+  color: var(--color-swen-green-light);
+}
 .gold-text {
   background: linear-gradient(160deg, #E8D5A3 0%, #C9A35A 40%, #E8D5A3 60%, #C9A35A 100%);
   -webkit-background-clip: text;
