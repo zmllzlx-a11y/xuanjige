@@ -106,6 +106,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   { href: "/constitution", label: "体质测评" },
                   { href: "/herb", label: "草药百科" },
                   { href: "/diet", label: "药膳食谱" },
+                  { href: "/consult", label: "🩺 AI问诊" },
+                  { href: "/ask", label: "AI顾问" },
+                  { href: "/acupoint", label: "经络" },
                 ].map((item) => (
                   <a
                     key={item.href}
@@ -116,41 +119,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-swen-green transition-all duration-300 group-hover:w-full" />
                   </a>
                 ))}
-                {/* 更多下拉 */}
-                <div className="relative group">
-                  <button className="relative text-swen-text/70 hover:text-swen-green transition-colors duration-200 flex items-center gap-1 cursor-pointer">
-                    更多
-                    <svg className="w-3 h-3 transition-transform group-hover:rotate-180" viewBox="0 0 10 6" fill="none">
-                      <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                  <div className="absolute top-full right-0 mt-2 w-44 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0"
-                    style={{ zIndex: 100 }}>
-                    <div className="p-2 rounded-xl"
-                      style={{ background: "rgba(9, 13, 8, 0.95)", border: "1px solid rgba(93,138,102,0.12)", backdropFilter: "blur(16px)" }}>
-                      {[
-                        { href: "/acupoint", label: "🌿 经络穴位" },
-                        { href: "/ask", label: "🍃 AI养生顾问" },
-                        { href: "/meditation", label: "🧘 静心禅坐" },
-                      ].map((item) => (
-                        <a key={item.href} href={item.href}
-                          className="block px-3 py-2 rounded-lg text-xs transition-all hover:bg-white/5"
-                          style={{ color: "rgba(232, 228, 218, 0.6)" }}>
-                          {item.label}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </div>
                 <a href="/pay"
                   className="relative text-swen-gold hover:text-swen-gold-light transition-colors duration-200">
                   💰 付费
                   <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-swen-gold transition-all duration-300 group-hover:w-full" />
-                </a>
-                <a href="/profile"
-                  className="relative text-swen-text/70 hover:text-swen-green transition-colors duration-200 group">
-                  我的
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-swen-green transition-all duration-300 group-hover:w-full" />
                 </a>
               </nav>
 
